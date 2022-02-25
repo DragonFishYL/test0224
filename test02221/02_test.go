@@ -166,3 +166,45 @@ func TestCount(t *testing.T) {
 	}
 	fmt.Printf("%+v", obj)
 }
+
+func TestAggreGate(t *testing.T) {
+	inv := Conn("local", "inventory")
+	reObj, err := inv.Aggregate(
+		context.TODO(),
+		[]interface{}{
+			bson.M{ //查询条件
+				"$match": bson.M{
+					"qty": bson.M{
+						"$gt": 5,
+						"$lt": 500,
+					},
+				},
+			},
+			bson.M{
+				"$project": bson.M{ //指定所需字段
+					"_id":    1,
+					"qty":    1,
+					"item":   1,
+					"status": 1,
+				},
+			},
+		},
+	)
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			return
+		}
+		panic(err)
+	}
+	var (
+		inventory     Inventory
+		inventorySlic = make([]Inventory, 0)
+	)
+	for reObj.Next(context.TODO()) {
+		if err = reObj.Decode(&inventory); err != nil {
+			panic(err)
+		}
+		inventorySlic = append(inventorySlic, inventory)
+	}
+	fmt.Printf("%+v--------%+v", inventorySlic, len(inventorySlic))
+}

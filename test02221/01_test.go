@@ -8,13 +8,12 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	bson2 "gopkg.in/mgo.v2/bson"
 	"log"
 	"os"
 )
 
 type Inventory struct {
-	Id     bson2.ObjectId `bson:"_id,omitempty"`
+	Id     interface{} `bson:"_id,omitempty"`
 	Item   string
 	Qty    interface{}
 	Status string
