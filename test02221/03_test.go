@@ -1,10 +1,22 @@
 package main
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestNode(t *testing.T) {
-	sortSlice = []int{2, 55, 3, 34, 6, 7, 24, 78, 10}
-	no := Node{}
-	no.GenerNode()
-	no.InGenera()
+	sortSlice := []int{55, 3, 10, 12, 66, 7, 11, 33, 26}
+	var (
+		tree Tree
+		node Node
+	)
+	for _, v := range sortSlice {
+		n := node.SetValue(v)
+		if tree.root == nil {
+			tree.root = &n
+		} else {
+			tree.CreateTree(tree.root, n)
+		}
+	}
+	tree.InGenerate(*tree.root)
 }
